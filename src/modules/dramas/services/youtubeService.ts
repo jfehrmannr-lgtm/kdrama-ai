@@ -8,7 +8,7 @@ interface YouTubeSearchResponse {
 }
 
 interface YouTubeChannelResponse {
-  items?: Array<{ id: { channelId: string } }>
+  items?: Array<{ id: string }>
 }
 
 /** Extracts a video id from either supported YouTube item shape. */
@@ -31,18 +31,22 @@ const resolveChannelId = async (
   fetcher: typeof fetch,
 ): Promise<string> => {
   const params = new URLSearchParams({
-    part: 'snippet',
-    q: 'MundoPelis',
-    type: 'channel',
-    maxResults: '1',
+    part: 'id',
+    forHandle: '@MundoPelis-o4n',
     key: apiKey,
   })
+
   const response = await fetchJson<YouTubeChannelResponse>(
-    new URL(`${API_ROOT}/search?${params}`),
+    new URL(`${API_ROOT}/channels?${params}`),
     fetcher,
   )
-  const channelId = response.items?.[0]?.id.channelId
-  if (!channelId) throw new Error('MundoPelis channel was not found')
+
+  const channelId = response.items?.[0]?.id
+
+  if (!channelId) {
+    throw new Error('MundoPelis channel was not found')
+  }
+
   return channelId
 }
 
