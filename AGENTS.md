@@ -19,6 +19,7 @@
 - Build/verification: `npm run build` (runs `tsc -b` before `vite build`)
 - Preview: `npm run preview`
 - Run `npm test`, `npm run lint`, and `npm run build` before considering a change verified.
+- Husky `pre-commit` runs `npm run lint`; `commit-msg` runs Commitlint. Use `npm run commit` for the Commitizen prompt.
 
 ## Runtime Configuration
 
@@ -31,6 +32,7 @@
 - TypeScript includes `src/` and enables `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, and `erasableSyntaxOnly`; remove unused symbols before building.
 - `npm install` updates the committed `package-lock.json`; do not add credentials or real environment values to tracked files.
 - New dependencies require explicit user authorization and must remain compatible with the current React/Vite stack.
+- Use Conventional Commits: `fix`/`perf`/`refactor` are patch-level changes, `feat` is minor-level, and `!` or `BREAKING CHANGE` is major-level under SemVer `MAJOR.MINOR.PATCH`.
 
 ## Code Conventions
 

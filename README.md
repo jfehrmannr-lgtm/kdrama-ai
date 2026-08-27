@@ -80,6 +80,7 @@ The Vite development server will print the local URL in the terminal.
 | `npm run lint` | Run ESLint across the project |
 | `npm run build` | Run TypeScript project checks and create the production bundle |
 | `npm run preview` | Serve the production bundle locally |
+| `npm run commit` | Open the interactive Commitizen Conventional Commit prompt |
 
 Run the full verification sequence before submitting changes:
 
@@ -88,6 +89,48 @@ npm test
 npm run lint
 npm run build
 ```
+
+## Commits and Releases
+
+Husky runs `npm run lint` before every commit and Commitlint validates the commit message. Use Commitizen for an interactive prompt:
+
+```bash
+npm run commit
+```
+
+Commit messages must follow the Conventional Commits format:
+
+```text
+type(scope): description
+```
+
+Supported types include `feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `revert`, and `style`. The format is designed to support Semantic Versioning (`MAJOR.MINOR.PATCH`):
+
+- `fix`, `perf`, and non-breaking `refactor` changes indicate a patch release.
+- `feat` indicates a backward-compatible minor release.
+- A `!` after the type/scope or a `BREAKING CHANGE:` footer indicates a major release.
+
+Examples:
+
+```text
+feat(dramas): add genre-aware recommendations
+fix(auth): handle unavailable Google Identity Services
+feat!: replace browser storage with server sessions
+```
+
+Commitlint still validates messages when Commitizen is bypassed.
+
+### Proposed Release Workflow
+
+Version changes should happen in a separate, deliberate release workflow rather than on every commit:
+
+1. Review commits since the previous release and select the highest required bump.
+2. Run `npm test`, `npm run lint`, and `npm run build`.
+3. Update the package version without creating an unvalidated automatic commit: `npm version patch --no-git-tag-version`, `npm version minor --no-git-tag-version`, or `npm version major --no-git-tag-version`.
+4. Create a validated release commit such as `chore(release): v0.1.0` and tag it as `v0.1.0`.
+5. Push the release commit and tag through the normal review or deployment process.
+
+The mapping is `fix` to PATCH, `feat` to MINOR, and `BREAKING CHANGE` or `!` to MAJOR. Release automation can later calculate this bump from the commit history, but this demo intentionally does not install or run an automatic versioning tool.
 
 ## Project Structure
 
